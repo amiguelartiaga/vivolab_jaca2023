@@ -15,6 +15,7 @@ if not os.path.exists('word2vec.pkl'):
     # open('word2vec.pkl', 'wb').write(r.content)
     os.system('wget http://dihana.cps.unizar.es/~cadrete/models/word2vec.pkl')
 
+import re
 import numpy as np
 class Word2Vec(object):
     def __init__(self):
@@ -24,6 +25,9 @@ class Word2Vec(object):
         self.xn = []
 
     def __getitem__(self, word):
+        # remove all punctuation marks except hyphen with re
+        word = re.sub(r'[^\w\s-]', '', word)
+        print(word)
         if ' ' in word:
             words = word.split(' ')
             w = 0
@@ -67,6 +71,6 @@ word2vec.word2ind = w2i
 word2vec.ind2word = i2w
 word2vec.xn = xn
 
-print( word2vec['Mejorar la calidad del vending'])
+print( word2vec['Mejorar, la calidad! del vending.'])
 
 
