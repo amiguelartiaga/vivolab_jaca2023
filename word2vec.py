@@ -41,7 +41,7 @@ class Word2Vec(object):
         n = 0
         for word in words:
             if word in self.word2ind:
-                print('+ word:', word)
+                # print('+ word:', word)
                 v += self.xn[self.word2ind[word]]
                 n += 1
 
