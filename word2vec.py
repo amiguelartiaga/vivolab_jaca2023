@@ -34,12 +34,18 @@ class Word2Vec(object):
         if ' ' in word:
             words = word.split(' ')
             w = 0
+            n = 0
             for word in words:
-                w += self[word]
-            return w / len(words)
+                if word in self.word2ind:
+                    print('+ word:', word)
+                    w += self[word]
+                    n += 1
+            if n == 0:
+                return np.zeros(self.xn.shape[1]).astype(np.float16)
+            return w / n
         else:
             if not word.lower() in self.word2ind:
-                return np.zeros(self.xn.shape[1])
+                return np.zeros(self.xn.shape[1]).astype(np.float16)
             return self.xn[self.word2ind[word.lower()]]
     
     def __len__(self):
