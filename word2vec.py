@@ -9,10 +9,11 @@ else:
 import os
 if not os.path.exists('word2vec.pkl'):
     print('Downloading word2vec model...')
-    import requests
-    url = 'http://dihana.cps.unizar.es/~cadrete/models/word2vec.pkl'
-    r = requests.get(url, allow_redirects=True)    
-    open('word2vec.pkl', 'wb').write(r.content)
+    # import requests
+    # url = 'http://dihana.cps.unizar.es/~cadrete/models/word2vec.pkl'
+    # r = requests.get(url, allow_redirects=True)    
+    # open('word2vec.pkl', 'wb').write(r.content)
+    os.system('wget http://dihana.cps.unizar.es/~cadrete/models/word2vec.pkl')
 
 import numpy as np
 class Word2Vec(object):
