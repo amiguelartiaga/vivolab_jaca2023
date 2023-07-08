@@ -39,7 +39,7 @@ def text_to_vector(text):
 
 def text_to_vector_by_phrases(texto, n=4, m=2):
     text_ = texto.split('.')
-    if len(text_) < 3:
+    if len(text_) < n:
         return 
     else:
         v_ = []
