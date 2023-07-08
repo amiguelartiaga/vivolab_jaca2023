@@ -2,7 +2,7 @@
 
 from transformers import AutoTokenizer, AutoModel
 import torch
-
+import numpy as np
 def mean_pooling(model_output, attention_mask):
     token_embeddings = model_output[
         0
@@ -33,5 +33,53 @@ def text_to_vector(text):
     sentence_embeddings = mean_pooling(model_output, encoded_input["attention_mask"])
     #   print(sentence_embeddings)
     return sentence_embeddings.cpu().numpy()
+
+def text_to_vector_by_phrases(texto, n=4, m=2):
+    text_ = texto.split('.')
+    if len(text_) < 3:
+        return 
+    else:
+        v_ = []
+        for i in range(0, len(text_)-3, m):
+            texto = '. '.join(text_[i:i+3]).strip()
+            #print(texto)
+            v_.append(text_to_vector(texto))
+        return np.concatenate(v_)
+    
+        
+import pandas as pd
+from tqdm import tqdm
+def pandas_text_vector(documentos, column_text='text', column_vector='text-vector'):
+    v = pd.DataFrame(columns=[column_vector])
+    v[column_vector] = v[column_vector].astype(object)
+    for i in tqdm( range(len(documentos)) ):
+        texto = documentos[column_text][i]        
+        v.loc[i,column_vector] = text_to_vector(texto)    
+    documentos[column_vector] = v[column_vector]
+    return documentos
+
+import pandas as pd
+from tqdm import tqdm
+def pandas_text_vector_by_phrases(documentos, column_text='text', column_vector='text-vector', n=3):
+    v = pd.DataFrame(columns=[column_vector])
+    v[column_vector] = v[column_vector].astype(object)
+
+    for i in tqdm( range(len(documentos)) ):
+        texto = documentos[column_text][i]        
+        v.loc[i,column_vector] = text_to_vector_by_phrases(texto)    
+    documentos[column_vector] = v[column_vector]
+    return documentos
+
+
+def pandas_text_similarity(datos, columna, search, searchname=None):
+    if searchname is None:
+        searchname = columna+' tsim '+search    
+    search = text_to_vector(search).T
+    for i in range(len(datos)):
+        vector = datos.iloc[i][columna]   
+        if not np.isnan(vector).any():
+            s = np.dot(vector, search).max()            
+            datos.at[i, searchname] = s
+    return datos
 
 

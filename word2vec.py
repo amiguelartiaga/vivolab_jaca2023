@@ -77,9 +77,9 @@ class Word2Vec(object):
         r = [(self.ind2word[i], float(s[i])) for i in ind[:n+len(pos)] if s[i] > 0 and not i in vp]
         return r[:n] 
 
-    def pandas_text_similarity(self, datos, columna, search, searchname=None):
+    def pandas_word_similarity(self, datos, columna, search, searchname=None):
         if searchname is None:
-            searchname = columna+' sim '+search
+            searchname = columna+' wsim '+search
         
         for i in range(len(datos)):
             texto = datos.iloc[i][columna]                      
