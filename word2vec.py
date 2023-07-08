@@ -5,8 +5,9 @@ except AttributeError:
     pass
 else:
     ssl._create_default_https_context = _create_unverified_https_context
-
+import pandas as pd
 import os
+
 if not os.path.exists('word2vec.pkl'):
     print('Downloading word2vec model...')
     # import requests
@@ -28,31 +29,35 @@ class Word2Vec(object):
         return word.lower() in self.word2ind
     
     def __getitem__(self, word):
-        # remove all punctuation marks except hyphen with re
-        word = re.sub(r'[^\w\s-]', '', word)
-        # print(word)
+        word = word.lower()
+        word = re.sub(r'[^\w\s-]', '', word)   
+
         if ' ' in word:
             words = word.split(' ')
-            w = 0
-            n = 0
-            for word in words:
-                if word in self.word2ind:
-                    print('+ word:', word)
-                    w += self[word]
-                    n += 1
-            if n == 0:
-                return np.zeros(self.xn.shape[1]).astype(np.float16)
-            return w / n
         else:
-            if not word.lower() in self.word2ind:
-                return np.zeros(self.xn.shape[1]).astype(np.float16)
-            return self.xn[self.word2ind[word.lower()]]
+            words = [word]
+
+        v = 0
+        n = 0
+        for word in words:
+            if word in self.word2ind:
+                print('+ word:', word)
+                v += self.xn[self.word2ind[word]]
+                n += 1
+
+        if n == 0:
+            return np.zeros(self.xn.shape[1]).astype(np.float16)
+        if n > 1:
+            v = v / np.linalg.norm(v)
+
+        return v
+    
     
     def __len__(self):
         return len(self.word2ind)
     
     def similarity(self, w, v):
-        return np.dot( self.xn[self.word2ind[w]], self.xn[self.word2ind[v]] )
+        return np.dot( self[w], self[v] )
 
     def most_similar(self, pos=[], neg=[], n=1):   
         if type(pos) == str:
@@ -72,6 +77,15 @@ class Word2Vec(object):
         r = [(self.ind2word[i], float(s[i])) for i in ind[:n+len(pos)] if s[i] > 0 and not i in vp]
         return r[:n] 
 
+    def pandas_text_similarity(self, datos, columna, search, searchname=None):
+        if searchname is None:
+            searchname = columna+' sim '+search
+        
+        for i in range(len(datos)):
+            texto = datos.iloc[i][columna]                      
+            if not pd.isna(texto):
+                datos.at[i, searchname] = word2vec.similarity(texto, search)
+        return datos
 
 import pickle
 with open('word2vec.pkl', 'rb') as f:
