@@ -32,7 +32,10 @@ def text_to_vector(text):
     # Perform pooling. In this case, max pooling.
     sentence_embeddings = mean_pooling(model_output, encoded_input["attention_mask"])
     #   print(sentence_embeddings)
-    return sentence_embeddings.cpu().numpy()
+    x = sentence_embeddings.cpu().numpy()
+    xn = x / np.linalg.norm(x, axis=1, keepdims=True)
+    return xn
+
 
 def text_to_vector_by_phrases(texto, n=4, m=2):
     text_ = texto.split('.')
