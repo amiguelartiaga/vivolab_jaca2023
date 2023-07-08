@@ -24,10 +24,13 @@ class Word2Vec(object):
         self.ind2word = {}
         self.xn = []
 
+    def __contains__(self, word):
+        return word.lower() in self.word2ind
+    
     def __getitem__(self, word):
         # remove all punctuation marks except hyphen with re
         word = re.sub(r'[^\w\s-]', '', word)
-        print(word)
+        # print(word)
         if ' ' in word:
             words = word.split(' ')
             w = 0
@@ -35,6 +38,8 @@ class Word2Vec(object):
                 w += self[word]
             return w / len(words)
         else:
+            if not word.lower() in self.word2ind:
+                return np.zeros(self.xn.shape[1])
             return self.xn[self.word2ind[word.lower()]]
     
     def __len__(self):
@@ -71,6 +76,5 @@ word2vec.word2ind = w2i
 word2vec.ind2word = i2w
 word2vec.xn = xn
 
-print( word2vec['Mejorar, la calidad! del vending.'])
 
 
