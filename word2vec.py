@@ -24,7 +24,14 @@ class Word2Vec(object):
         self.xn = []
 
     def __getitem__(self, word):
-        return self.xn[self.word2ind[word]]
+        if ' ' in word:
+            words = word.split(' ')
+            w = 0
+            for word in words:
+                w += self[word]
+            return w / len(words)
+        else:
+            return self.xn[self.word2ind[word.lower()]]
     
     def __len__(self):
         return len(self.word2ind)
@@ -59,5 +66,7 @@ word2vec = Word2Vec()
 word2vec.word2ind = w2i
 word2vec.ind2word = i2w
 word2vec.xn = xn
+
+print( word2vec['Mejorar la calidad del vending'])
 
 
