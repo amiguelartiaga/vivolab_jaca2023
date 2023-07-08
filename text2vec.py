@@ -32,6 +32,6 @@ def text_to_vector(text):
     # Perform pooling. In this case, max pooling.
     sentence_embeddings = mean_pooling(model_output, encoded_input["attention_mask"])
     #   print(sentence_embeddings)
-    return sentence_embeddings
+    return sentence_embeddings.cpu().numpy()
 
 
