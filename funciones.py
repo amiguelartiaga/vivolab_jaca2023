@@ -1,9 +1,4 @@
-
-try:
-    import justext as jt
-except:
-    !pip install justext
-    import justext as jt
+import justext as jt
 
 def limpiar_texto_html(text):
     stop = jt.get_stoplist("Spanish")
