@@ -74,12 +74,12 @@ def pandas_text_vector_by_phrases(datos, column_text='text', column_vector='text
     return datos
 
 
-def pandas_text_similarity(datos, columna, search, searchname=None):
+def pandas_text_similarity(datos, column, search, searchname=None):
     if searchname is None:
-        searchname = columna+' tsim '+search    
+        searchname = column+' tsim '+search    
     search = text_to_vector(search).T
     for i in tqdm(datos.index):
-        vector = datos[column_text][i]  
+        vector = datos[column][i]  
         if not np.isnan(vector).any():
             s = np.dot(vector, search).max()            
             datos.at[i, searchname] = s
