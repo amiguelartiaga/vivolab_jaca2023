@@ -55,7 +55,7 @@ from tqdm import tqdm
 def pandas_text_vector(datos, column_text='text', column_vector='text-vector'):
     v = pd.DataFrame(columns=[column_vector])
     v[column_vector] = v[column_vector].astype(object)
-    for i in tqdm( range(len(datos)) ):
+    for i,_ in tqdm( range(len(datos)) ):
         texto = datos[column_text][i]        
         v.loc[i,column_vector] = text_to_vector(texto)    
     datos[column_vector] = v[column_vector]

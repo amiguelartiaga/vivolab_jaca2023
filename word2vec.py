@@ -7,7 +7,7 @@ else:
     ssl._create_default_https_context = _create_unverified_https_context
 import pandas as pd
 import os
-
+from tqdm import tqdm
 if not os.path.exists('word2vec.pkl'):
     print('Downloading word2vec model...')
     # import requests
@@ -81,7 +81,7 @@ class Word2Vec(object):
         if searchname is None:
             searchname = columna+' wsim '+search
         
-        for i in range(len(datos)):
+        for i,_ in tqdm( range(len(datos)) ):
             texto = datos.iloc[i][columna]                      
             if not pd.isna(texto):
                 datos.at[i, searchname] = word2vec.similarity(texto, search)
