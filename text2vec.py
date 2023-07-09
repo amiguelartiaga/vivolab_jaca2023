@@ -79,7 +79,7 @@ def pandas_text_similarity(datos, columna, search, searchname=None):
         searchname = columna+' tsim '+search    
     search = text_to_vector(search).T
     for i in tqdm(datos.index):
-        vector = datos.iloc[i][columna]   
+        vector = datos[column_text][i]  
         if not np.isnan(vector).any():
             s = np.dot(vector, search).max()            
             datos.at[i, searchname] = s
