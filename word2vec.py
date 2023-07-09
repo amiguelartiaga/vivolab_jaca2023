@@ -81,7 +81,7 @@ class Word2Vec(object):
         if searchname is None:
             searchname = columna+' wsim '+search
         
-        for i,_ in tqdm( datos.iterrows() ):
+        for i in tqdm(datos.index):
             texto = datos.iloc[i][columna]                      
             if not pd.isna(texto):
                 datos.at[i, searchname] = word2vec.similarity(texto, search)

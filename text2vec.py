@@ -55,7 +55,7 @@ from tqdm import tqdm
 def pandas_text_vector(datos, column_text='text', column_vector='text-vector'):
     v = pd.DataFrame(columns=[column_vector])
     v[column_vector] = v[column_vector].astype(object)
-    for i,_ in tqdm( datos.iterrows() ):
+    for i in tqdm(datos.index):
         texto = datos[column_text][i]        
         v.loc[i,column_vector] = text_to_vector(texto)    
     datos[column_vector] = v[column_vector]
@@ -67,7 +67,7 @@ def pandas_text_vector_by_phrases(datos, column_text='text', column_vector='text
     v = pd.DataFrame(columns=[column_vector])
     v[column_vector] = v[column_vector].astype(object)
 
-    for i,_ in tqdm( datos.iterrows() ):
+    for i in tqdm(datos.index):
         texto = datos[column_text][i]        
         v.loc[i,column_vector] = text_to_vector_by_phrases(texto)    
     datos[column_vector] = v[column_vector]
@@ -78,7 +78,7 @@ def pandas_text_similarity(datos, columna, search, searchname=None):
     if searchname is None:
         searchname = columna+' tsim '+search    
     search = text_to_vector(search).T
-    for i,_ in tqdm( datos.iterrows() ):
+    for i in tqdm(datos.index):
         vector = datos.iloc[i][columna]   
         if not np.isnan(vector).any():
             s = np.dot(vector, search).max()            
