@@ -52,33 +52,33 @@ def text_to_vector_by_phrases(texto, n=4, m=2):
         
 import pandas as pd
 from tqdm import tqdm
-def pandas_text_vector(documentos, column_text='text', column_vector='text-vector'):
+def pandas_text_vector(datos, column_text='text', column_vector='text-vector'):
     v = pd.DataFrame(columns=[column_vector])
     v[column_vector] = v[column_vector].astype(object)
-    for i in tqdm( range(len(documentos)) ):
-        texto = documentos[column_text][i]        
+    for i in tqdm( range(len(datos)) ):
+        texto = datos[column_text][i]        
         v.loc[i,column_vector] = text_to_vector(texto)    
-    documentos[column_vector] = v[column_vector]
-    return documentos
+    datos[column_vector] = v[column_vector]
+    return datos
 
 import pandas as pd
 from tqdm import tqdm
-def pandas_text_vector_by_phrases(documentos, column_text='text', column_vector='text-vector', n=3):
+def pandas_text_vector_by_phrases(datos, column_text='text', column_vector='text-vector', n=3):
     v = pd.DataFrame(columns=[column_vector])
     v[column_vector] = v[column_vector].astype(object)
 
-    for i in tqdm( range(len(documentos)) ):
-        texto = documentos[column_text][i]        
+    for i,_ in tqdm( datos.iterrows() ):
+        texto = datos[column_text][i]        
         v.loc[i,column_vector] = text_to_vector_by_phrases(texto)    
-    documentos[column_vector] = v[column_vector]
-    return documentos
+    datos[column_vector] = v[column_vector]
+    return datos
 
 
 def pandas_text_similarity(datos, columna, search, searchname=None):
     if searchname is None:
         searchname = columna+' tsim '+search    
     search = text_to_vector(search).T
-    for i in range(len(datos)):
+    for i,_ in tqdm( datos.iterrows() ):
         vector = datos.iloc[i][columna]   
         if not np.isnan(vector).any():
             s = np.dot(vector, search).max()            
